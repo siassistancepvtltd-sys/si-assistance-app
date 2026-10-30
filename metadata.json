@@ -1,0 +1,6 @@
+{
+  "name": "S.I. Assistance - 24x7 Road Side Assistance",
+  "description": "24x7 Emergency Towing, Vehicle Recovery, and Roadside Assistance across India. Book instant towing, car carrier, and minor repair services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

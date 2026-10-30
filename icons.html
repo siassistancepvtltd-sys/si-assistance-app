@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>App Icons Generator & Downloader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0B132B;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 5px; }
+    p { color: #8892b0; margin-bottom: 25px; }
+    .btn-download-all {
+      background: #00d2ff;
+      color: #0B132B;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+    }
+    .btn-download-all:hover {
+      background: #00b4db;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card p {
+      margin: 10px 0;
+      color: #e6f1ff;
+      font-size: 14px;
+    }
+    canvas {
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .single-dl {
+      background: #1C2541;
+      color: #00d2ff;
+      border: 1px solid #00d2ff;
+      padding: 6px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .single-dl:hover {
+      background: #00d2ff;
+      color: #1C2541;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>S.I.Assistance - App Icons Pack</h1>
+  <p>यहाँ सभी 6 सर्विस कार्ड और 4 फ़ूटर आइकॉन तैयार हैं। इन्हें एक साथ या अलग-अलग डाउनलोड करें।</p>
+  <button class="btn-download-all" onclick="downloadAll()">⬇️ Download All 10 PNGs (एक साथ डाउनलोड करें)</button>
+
+  <div class="grid" id="iconGrid"></div>
+
+  <script>
+    const items = [
+      // 6 Services
+      { id: "towing", name: "Towing & Recovery", type: "service", text: "Towing &\nRecovery", icon: "towing" },
+      { id: "roadside", name: "Roadside Assistance", type: "service", text: "Roadside\nAssistance", icon: "tools" },
+      { id: "carrier", name: "Car Carrier", type: "service", text: "Car Carrier", icon: "carrier" },
+      { id: "lockout", name: "Lockout Service", type: "service", text: "Lockout\nService", icon: "lock" },
+      { id: "fuel", name: "Fuel Delivery", type: "service", text: "Fuel\nDelivery", icon: "fuel" },
+      { id: "tyre", name: "Tyre Change", type: "service", text: "Tyre Change", icon: "tyre" },
+      // 4 Footer Nav
+      { id: "nav_home", name: "Home", type: "nav", text: "Home", icon: "nav_home", active: true },
+      { id: "nav_bookings", name: "My Bookings", type: "nav", text: "My Bookings", icon: "nav_bookings" },
+      { id: "nav_contact", name: "Contact", type: "nav", text: "Contact", icon: "nav_contact" },
+      { id: "nav_more", name: "More", type: "nav", text: "More", icon: "nav_more" }
+    ];
+
+    const grid = document.getElementById("iconGrid");
+
+    items.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const canvas = document.createElement("canvas");
+      canvas.width = item.type === "service" ? 220 : 140;
+      canvas.height = item.type === "service" ? 200 : 120;
+      drawIcon(canvas, item);
+
+      const title = document.createElement("p");
+      title.innerText = item.name;
+
+      const btn = document.createElement("button");
+      btn.className = "single-dl";
+      btn.innerText = "Download PNG";
+      btn.onclick = () => downloadCanvas(canvas, `${item.id}.png`);
+
+      card.appendChild(canvas);
+      card.appendChild(title);
+      card.appendChild(btn);
+      grid.appendChild(card);
+      item.canvas = canvas;
+    });
+
+    function drawIcon(canvas, item) {
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (item.type === "service") {
+        // Draw White Rounded Card Background
+        ctx.fillStyle = "#FFFFFF";
+        roundRect(ctx, 4, 4, w - 8, h - 8, 24);
+        ctx.fill();
+
+        // Icon color
+        ctx.fillStyle = "#0B132B";
+        ctx.strokeStyle = "#0B132B";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        const cx = w / 2;
+        const cy = 68;
+
+        if (item.icon === "towing") {
+          // Flatbed / Hook Tow Truck
+          ctx.beginPath();
+          ctx.moveTo(cx - 45, cy + 12);
+          ctx.lineTo(cx + 20, cy + 12);
+          ctx.lineTo(cx + 20, cy - 20);
+          ctx.lineTo(cx + 38, cy - 10);
+          ctx.lineTo(cx + 45, cy + 12);
+          ctx.lineTo(cx - 45, cy + 12);
+          ctx.fill();
+          // Wheels
+          ctx.beginPath();
+          ctx.arc(cx - 30, cy + 18, 9, 0, Math.PI * 2);
+          ctx.arc(cx + 28, cy + 18, 9, 0, Math.PI * 2);
+          ctx.fill();
+          // Crane Arm
+          ctx.beginPath();
+          ctx.moveTo(cx - 5, cy + 8);
+          ctx.lineTo(cx - 35, cy - 18);
+          ctx.stroke();
+        } else if (item.icon === "tools") {
+          // Crossed Wrench and Screwdriver
+          ctx.beginPath();
+          ctx.moveTo(cx - 24, cy - 24); ctx.lineTo(cx + 24, cy + 24);
+          ctx.moveTo(cx + 24, cy - 24); ctx.lineTo(cx - 24, cy + 24);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx - 24, cy - 24, 7, 0, Math.PI * 2);
+          ctx.arc(cx + 24, cy - 24, 6, 0, Math.PI * 2);
+          ctx.stroke();
+        } else if (item.icon === "carrier") {
+          // Covered Carrier Truck
+          ctx.beginPath();
+          ctx.strokeRect(cx - 42, cy - 22, 54, 34);
+          ctx.strokeRect(cx + 14, cy - 8, 28, 20);
+          ctx.beginPath();
+          ctx.arc(cx - 22, cy + 18, 8, 0, Math.PI * 2);
+          ctx.arc(cx + 28, cy + 18, 8, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (item.icon === "lock") {
+          // Padlock
+          roundRect(ctx, cx - 22, cy - 8, 44, 34, 8);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(cx, cy - 8, 16, Math.PI, 0);
+          ctx.stroke();
+          ctx.fillStyle = "#FFFFFF";
+          ctx.beginPath();
+          ctx.arc(cx, cy + 6, 4, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (item.icon === "fuel") {
+          // Fuel Pump
+          roundRect(ctx, cx - 22, cy - 24, 32, 46, 6);
+          ctx.stroke();
+          ctx.strokeRect(cx - 16, cy - 18, 20, 14);
+          ctx.beginPath();
+          ctx.moveTo(cx + 10, cy - 10);
+          ctx.lineTo(cx + 24, cy - 10);
+          ctx.lineTo(cx + 24, cy + 16);
+          ctx.stroke();
+        } else if (item.icon === "tyre") {
+          // Tyre Wheel Rim
+          ctx.beginPath();
+          ctx.arc(cx, cy, 26, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Service Text
+        ctx.fillStyle = "#0B132B";
+        ctx.font = "bold 18px Arial, sans-serif";
+        ctx.textAlign = "center";
+        const lines = item.text.split("\n");
+        if (lines.length === 1) {
+          ctx.fillText(lines[0], cx, 148);
+        } else {
+          ctx.fillText(lines[0], cx, 138);
+          ctx.fillText(lines[1], cx, 162);
+        }
+
+      } else {
+        // Nav Icons (Footer)
+        const cx = w / 2;
+        const cy = 42;
+        const col = item.active ? "#00D2FF" : "#FFFFFF";
+
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.lineWidth = 3.5;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        if (item.icon === "nav_home") {
+          ctx.beginPath();
+          ctx.moveTo(cx - 20, cy + 6);
+          ctx.lineTo(cx, cy - 14);
+          ctx.lineTo(cx + 20, cy + 6);
+          ctx.stroke();
+          ctx.strokeRect(cx - 14, cy + 6, 28, 16);
+        } else if (item.icon === "nav_bookings") {
+          roundRect(ctx, cx - 16, cy - 16, 32, 38, 5);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx - 10, cy - 4); ctx.lineTo(cx + 10, cy - 4);
+          ctx.moveTo(cx - 10, cy + 6); ctx.lineTo(cx + 10, cy + 6);
+          ctx.stroke();
+        } else if (item.icon === "nav_contact") {
+          ctx.beginPath();
+          ctx.arc(cx, cy, 16, 0.4, 2.7);
+          ctx.stroke();
+          ctx.strokeRect(cx - 12, cy - 8, 10, 16);
+          ctx.strokeRect(cx + 2, cy - 8, 10, 16);
+        } else if (item.icon === "nav_more") {
+          for (let i = -10; i <= 10; i += 10) {
+            ctx.beginPath();
+            ctx.arc(cx - 12, cy + i, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(cx - 2, cy + i);
+            ctx.lineTo(cx + 16, cy + i);
+            ctx.stroke();
+          }
+        }
+
+        // Nav Text
+        ctx.font = "bold 13px Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(item.text, cx, 88);
+      }
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function downloadCanvas(canvas, filename) {
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    function downloadAll() {
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          downloadCanvas(item.canvas, `${item.id}.png`);
+        }, index * 250);
+      });
+    }
+  </script>
+</body>
+</html>
